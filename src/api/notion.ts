@@ -169,3 +169,67 @@ export const fetchNotionSearch = async (
     notionToken,
   });
 };
+
+// Get space/organization information for a page
+export const getPageSpaceInfo = async (
+  pageId: string,
+  notionToken?: string
+) => {
+  // First fetch the page to get any block
+  const pageData = await fetchPageById(pageId, notionToken);
+
+  // Log the page data structure for debugging
+  console.log(JSON.stringify(pageData, null, 2));
+
+  if (
+    !pageData.recordMap.block ||
+    Object.keys(pageData.recordMap.block).length === 0
+  ) {
+    return null;
+  }
+
+  // Get the first block
+  const blockId = Object.keys(pageData.recordMap.block)[0];
+  const block = pageData.recordMap.block[blockId];
+
+  // Use getSpaces API to get information about all spaces the user has access to
+  const spacesData = await fetchNotionData({
+    resource: "getSpaces",
+    body: {},
+    notionToken,
+  });
+
+  // Return the spaces data and the block info which contains space_id
+  return {
+    block,
+    spaces: spacesData,
+  };
+};
+
+// Check if a page belongs to a specific space/org
+export const isPageInSpace = async (
+  pageId: string,
+  spaceId: string,
+  notionToken?: string
+) => {
+  const spaceInfo = await getPageSpaceInfo(pageId, notionToken);
+
+  if (!spaceInfo || !spaceInfo.block || !spaceInfo.block.value) {
+    return false;
+  }
+
+  // Check if the block has space_id property
+  if (spaceInfo.block.value.space_id === spaceId) {
+    return true;
+  }
+
+  // If the API response format doesn't have space_id directly on the block,
+  // we may need to infer it from the space membership data
+  if (spaceInfo.spaces) {
+    // Implementation depends on the exact structure of the getSpaces response
+    // This is a placeholder for the logic to check if the page belongs to the specified space
+    return false;
+  }
+
+  return false;
+};

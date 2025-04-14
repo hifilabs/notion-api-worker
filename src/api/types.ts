@@ -11,7 +11,7 @@ type DateFormatType = [
     type: "date";
     start_date: string;
     date_format: string;
-  }
+  },
 ];
 type UserFormatType = ["u", string];
 type PageFormatType = ["p", string];
@@ -74,6 +74,7 @@ export interface BaseValueType {
   last_edited_by_table: string;
   last_edited_by_id: string;
   content?: string[];
+  space_id?: string;
 }
 
 export interface CollectionType {

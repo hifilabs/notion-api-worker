@@ -56,6 +56,63 @@ All public pages can be accessed without authorization. If you want to fetch pri
 
 To obtain your token, login to Notion and open your DevTools and find your cookies. There should be a cookie called `token_v2`, which is used for the authorization.
 
+## Configuration Options
+
+### Enabling/Disabling Routes
+
+You can control which API endpoints are available by configuring the `wrangler.toml` file. This allows you to disable specific routes that you don't need or want to expose.
+
+```toml
+[vars]
+# Set to true to enable, false to disable
+PAGE_ENABLED = true    # Controls /v1/page/:pageId endpoint
+TABLE_ENABLED = true   # Controls /v1/table/:pageId endpoint
+SEARCH_ENABLED = true  # Controls /v1/search endpoint
+USER_ENABLED = true    # Controls /v1/user/:userId endpoint
+```
+
+This way, you can expose only the specific endpoints you need for your application.
+
+### Organization/Workspace Restrictions
+
+You can restrict access to only allow pages from your organization/workspace. This is useful for preventing access to pages outside your organization, even if a user has valid authentication.
+
+```toml
+[vars]
+# For a single space/organization ID:
+ALLOWED_SPACE_ID = "your-space-id"
+
+# For multiple space IDs (comma-separated):
+ALLOWED_SPACE_IDS = "space-id-1,space-id-2,space-id-3"
+```
+
+To find your workspace/space ID:
+1. Use the browser dev tools with a page from your workspace loaded
+2. Look for requests to the Notion API that contain a `space_id` field
+3. Alternatively, inspect the response from `/v1/page/<PAGE_ID>` and look for the `space_id` property in the block data
+
+### Environment-specific Configuration
+
+You can define different configurations for different environments:
+
+```toml
+# Default environment
+[vars]
+PAGE_ENABLED = true
+TABLE_ENABLED = true
+SEARCH_ENABLED = true
+USER_ENABLED = true
+
+# Production environment
+[env.production]
+# Example: Only enable page and table routes in production
+PAGE_ENABLED = true
+TABLE_ENABLED = true
+SEARCH_ENABLED = false
+USER_ENABLED = false
+ALLOWED_SPACE_ID = "your-production-space-id"
+```
+
 ## Credits
 
 - [Timo Lins](https://twitter.com/timolins) – Idea, Documentation

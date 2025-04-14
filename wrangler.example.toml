@@ -1,9 +1,19 @@
 name = "notion-cloudflare-worker"
-webpack_config = "webpack.config.js"
-type = "webpack"
-workers_dev = true
-
+compatibility_date = "2024-05-16"
 account_id = ""
-zone_id = ""
 
-route = "notion-api.splitbee.io/*"
+main = "src/index.ts"
+
+# Feature flags for enabling/disabling routes
+# Set to true to enable, false to disable
+[vars]
+PAGE_ENABLED = true    # Controls /v1/page/:pageId endpoint
+TABLE_ENABLED = false  # Controls /v1/table/:pageId endpoint
+SEARCH_ENABLED = false # Controls /v1/search endpoint
+USER_ENABLED = false   # Controls /v1/user/:userId endpoint
+
+# Add your organization's Notion Space/Organization ID here
+# Can be found in Settings > Identity under Setup Information (Workspace Id)
+ALLOWED_SPACE_ID = "XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+# For multiple space IDs (comma-separated):
+# ALLOWED_SPACE_IDS = "space-id-1,space-id-2,space-id-3"
