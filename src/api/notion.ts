@@ -218,8 +218,8 @@ export const isPageInSpace = async (
     return false;
   }
 
-  // Check if the block has space_id property
-  if (spaceInfo.block.value.space_id === spaceId) {
+  // Notion's loadPageChunk returns spaceId at the top level of each block entry
+  if ((spaceInfo.block as any).spaceId === spaceId) {
     return true;
   }
 

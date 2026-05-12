@@ -20,6 +20,7 @@ declare global {
   // NOTION_TOKEN is already declared by Cloudflare Workers
   const ALLOWED_SPACE_ID: string | undefined;
   const ALLOWED_SPACE_IDS: string | undefined;
+  const CACHE_TTL: number | undefined;
 }
 
 export type Handler = (
@@ -88,6 +89,9 @@ const cache = (caches as any).default;
 // NOTION_TOKEN is already defined in global scope by Cloudflare Workers
 const NOTION_API_TOKEN =
   typeof NOTION_TOKEN !== "undefined" ? NOTION_TOKEN : undefined;
+
+// Get cache TTL from environment variable (default to 300 seconds / 5 minutes)
+const CACHE_EXPIRATION_TTL = typeof CACHE_TTL !== "undefined" ? CACHE_TTL : 300;
 
 // Get allowed space IDs from environment variable
 const ALLOWED_SPACE_IDS_LIST: string[] = (() => {
@@ -199,7 +203,9 @@ const handleRequest = async (fetchEvent: FetchEvent): Promise<Response> => {
     });
 
     if (cacheKey) {
-      await cache.put(cacheKey, res.clone());
+      await cache.put(cacheKey, res.clone(), {
+        expirationTtl: CACHE_EXPIRATION_TTL,
+      });
     }
 
     return res;

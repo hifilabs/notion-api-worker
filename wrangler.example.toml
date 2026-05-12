@@ -1,19 +1,29 @@
 name = "notion-cloudflare-worker"
 compatibility_date = "2024-05-16"
-account_id = ""
+account_id = "ac793f58edbd817df7a599c8a15813da"
 
 main = "src/index.ts"
 
 # Feature flags for enabling/disabling routes
 # Set to true to enable, false to disable
 [vars]
-PAGE_ENABLED = true    # Controls /v1/page/:pageId endpoint
-TABLE_ENABLED = false  # Controls /v1/table/:pageId endpoint
-SEARCH_ENABLED = false # Controls /v1/search endpoint
-USER_ENABLED = false   # Controls /v1/user/:userId endpoint
-
 # Add your organization's Notion Space/Organization ID here
-# Can be found in Settings > Identity under Setup Information (Workspace Id)
+# For a single space ID:
 ALLOWED_SPACE_ID = "XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
 # For multiple space IDs (comma-separated):
 # ALLOWED_SPACE_IDS = "space-id-1,space-id-2,space-id-3"
+
+PAGE_ENABLED = true    # Controls /v1/page/:pageId endpoint
+TABLE_ENABLED = false  # Controls /v1/table/:pageId endpoint
+SEARCH_ENABLED = false
+USER_ENABLED = false
+CACHE_TTL = 30
+
+# You can also define a production environment with different settings
+[env.production]
+ALLOWED_SPACE_ID = "XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+# Example: Disable search and user routes in production
+# SEARCH_ENABLED = false
+# USER_ENABLED = false
+# Set organization space ID for production
+# ALLOWED_SPACE_ID = "your-production-space-id"

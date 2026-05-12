@@ -75,7 +75,7 @@ This way, you can expose only the specific endpoints you need for your applicati
 
 ### Organization/Workspace Restrictions
 
-You can restrict access to only allow pages from your organization/workspace. This is useful for preventing access to pages outside your organization, even if a user has valid authentication.
+You can restrict access to only allow pages from your organization/workspace. This is useful for preventing access to pages outside your organization, even if a user has valid authentication.w
 
 ```toml
 [vars]
